@@ -288,7 +288,7 @@ def render_prompt_section():
         st.markdown("""
         - Soyez précis sur le type de pièce
         - Mentionnez le style architectural
-        - Incluez "Floor plan." comme préfixe au prompt
+        - Incluez "floor plan"
         """)
     
     # Prompt principal
@@ -433,8 +433,16 @@ def render_task_monitoring():
             
             with col1:
                 if st.button("💾 Sauvegarder vers S3"):
-                    # TODO: Implémenter la sauvegarde vers S3
-                    st.info("Sauvegarde vers S3 à implémenter")
+                    try:
+                        # Upload vers S3
+                        s3_url = inference_engine.upload_to_s3(result)
+                        if s3_url:
+                            st.success(f"✅ Image uploadée vers S3: {s3_url}")
+                            result.s3_url = s3_url
+                        else:
+                            st.error("❌ Erreur lors de l'upload S3")
+                    except Exception as e:
+                        st.error(f"❌ Erreur S3: {e}")
             
             with col2:
                 if st.button("🔄 Régénérer"):

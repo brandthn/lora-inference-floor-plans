@@ -16,14 +16,24 @@ from diffusers.schedulers import (
 )
 
 from .config import config_manager
-from .generation_params import GenerationParams
+from .generation_params import GenerationParams, GenerationResult
 from .utils.image_utils import save_image, create_canny_image
 
 class InferenceEngine:
     """Moteur d'inférence principal pour la génération d'images"""
     
     def __init__(self):
-        self.device = "cuda" if torch.cuda.is_available() else "cpu"
+        # Détection du device optimal
+        if torch.cuda.is_available():
+            self.device = "cuda"
+            print("🚀 Utilisation de CUDA")
+        elif torch.backends.mps.is_available():
+            self.device = "mps"
+            print("🍎 Utilisation de Metal Performance Shaders (MPS)")
+        else:
+            self.device = "cpu"
+            print("💻 Utilisation du CPU")
+        
         self.pipelines = {}
         self.controlnet_models = {}
         self.current_base_model = None
@@ -56,6 +66,15 @@ class InferenceEngine:
         
         return True
     
+    def _get_torch_dtype(self):
+        """Retourne le dtype optimal selon le device"""
+        if self.device == "cuda":
+            return torch.float16  # GPU supporte float16
+        elif self.device == "mps":
+            return torch.float32  # MPS marche mieux avec float32
+        else:
+            return torch.float32  # CPU utilise float32
+    
     def _get_scheduler(self, sampler_name: str):
         """Retourne le scheduler correspondant au nom"""
         schedulers = {
@@ -80,16 +99,20 @@ class InferenceEngine:
         # Charger le pipeline
         pipeline = StableDiffusionXLPipeline.from_single_file(
             model_path,
-            torch_dtype=torch.float16 if self.device == "cuda" else torch.float32,
+            torch_dtype=self._get_torch_dtype(),
             use_safetensors=True
         )
         
         pipeline = pipeline.to(self.device)
         
-        # Optimisations pour la performance
+        # Optimisations selon le device
         if self.device == "cuda":
             pipeline.enable_attention_slicing()
             pipeline.enable_model_cpu_offload()
+        elif self.device == "mps":
+            # MPS optimisations
+            pipeline.enable_attention_slicing()
+            # Ne pas utiliser model_cpu_offload avec MPS
         
         return pipeline
     
@@ -110,7 +133,7 @@ class InferenceEngine:
         # Charger le ControlNet
         controlnet = ControlNetModel.from_single_file(
             controlnet_path,
-            torch_dtype=torch.float16 if self.device == "cuda" else torch.float32,
+            torch_dtype=self._get_torch_dtype(),
             use_safetensors=True
         )
         
@@ -118,16 +141,18 @@ class InferenceEngine:
         pipeline = StableDiffusionXLControlNetPipeline.from_single_file(
             model_path,
             controlnet=controlnet,
-            torch_dtype=torch.float16 if self.device == "cuda" else torch.float32,
+            torch_dtype=self._get_torch_dtype(),
             use_safetensors=True
         )
         
         pipeline = pipeline.to(self.device)
         
-        # Optimisations pour la performance
+        # Optimisations selon le device
         if self.device == "cuda":
             pipeline.enable_attention_slicing()
             pipeline.enable_model_cpu_offload()
+        elif self.device == "mps":
+            pipeline.enable_attention_slicing()
         
         return pipeline
     
@@ -158,7 +183,6 @@ class InferenceEngine:
                 return pipeline
             except Exception as e2:
                 raise Exception(f"Impossible de charger le LoRA: {e2}")
-    
     
     def _prepare_seed(self, seed: int) -> int:
         """Prépare le seed pour la génération"""
@@ -208,11 +232,8 @@ class InferenceEngine:
         filename = f"{params.get_filename_prefix()}_seed_{actual_seed}.png"
         image_path = save_image(image, filename, params.to_dict())
         
-        # TODO: Upload vers S3 si configuré
-        s3_url = None
-        
         print(f"✅ Image générée: {image_path}")
-        return image_path, s3_url
+        return image_path, None
     
     def generate_combined_approach(self, params: GenerationParams) -> Tuple[str, Optional[str]]:
         """Génère une image avec l'approche combinée (wall_lora + controlnet + plan_lora)"""
@@ -287,11 +308,8 @@ class InferenceEngine:
         save_image(wall_image, wall_filename, {"step": "wall_generation"})
         save_image(canny_image, canny_filename, {"step": "canny_processing"})
         
-        # TODO: Upload vers S3 si configuré
-        s3_url = None
-        
         print(f"✅ Image générée (approche combinée): {image_path}")
-        return image_path, s3_url
+        return image_path, None
     
     def generate(self, params: GenerationParams) -> Tuple[str, Optional[str]]:
         """Point d'entrée principal pour la génération"""
@@ -311,9 +329,27 @@ class InferenceEngine:
             raise
         
         finally:
-            # Nettoyer la mémoire GPU
+            # Nettoyer la mémoire GPU/MPS
             if torch.cuda.is_available():
                 torch.cuda.empty_cache()
+            elif torch.backends.mps.is_available():
+                torch.mps.empty_cache()
+    
+    def upload_to_s3(self, result: GenerationResult) -> Optional[str]:
+        """Upload optionnel vers S3"""
+        try:
+            from .services.s3_service import s3_service
+            
+            # Upload vers S3
+            s3_metadata = s3_service.upload_generation(result)
+            s3_url = s3_metadata.s3_paths.main_image
+            
+            print(f"✅ Image uploadée vers S3: {s3_url}")
+            return s3_url
+            
+        except Exception as e:
+            print(f"⚠️  Erreur lors de l'upload S3: {e}")
+            return None
     
     def get_model_info(self) -> Dict[str, Any]:
         """Retourne des informations sur les modèles disponibles"""
@@ -336,9 +372,17 @@ class InferenceEngine:
         """Retourne des informations sur la mémoire"""
         if torch.cuda.is_available():
             return {
+                "device": "cuda",
                 "gpu_memory_allocated": torch.cuda.memory_allocated() / 1024**3,  # GB
                 "gpu_memory_reserved": torch.cuda.memory_reserved() / 1024**3,    # GB
                 "gpu_name": torch.cuda.get_device_name(0)
+            }
+        elif torch.backends.mps.is_available():
+            return {
+                "device": "mps",
+                "mps_available": True,
+                "unified_memory": True,
+                "apple_silicon": True
             }
         else:
             return {"device": "cpu"}

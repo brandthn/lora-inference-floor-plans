@@ -1,0 +1,26 @@
+{
+  "timestamp": "2025-07-18T14:41:57.980140",
+  "filename": "20250718_144157_single_lora_2a02ec1a_seed_372383731.png",
+  "image_size": [
+    512,
+    512
+  ],
+  "image_mode": "RGB",
+  "prompt": "Floor plan. The first bedroom is located at south east. The second bedroom is located at south. The dining and lounge are combined and are located at north west. The first storeroom is located at center. The second storeroom is located at south west. The first bathroom is located at south. The second bathroom is located at center.",
+  "negative_prompt": "",
+  "steps": 30,
+  "cfg_scale": 7.5,
+  "sampler": "Euler a",
+  "seed": -1,
+  "denoise_strength": 0.8,
+  "width": 512,
+  "height": 512,
+  "batch_size": 1,
+  "base_model": "sdxl_base",
+  "approach": "single_lora",
+  "lora_model": "lora_plan_v1",
+  "lora_weight": 0.8,
+  "wall_lora_weight": 0.7,
+  "plan_lora_weight": 0.8,
+  "controlnet_weight": 1.0
+}

@@ -64,15 +64,16 @@ BASE_MODEL_PATH=data/models/base
 LORA_MODEL_PATH=data/models/lora
 CONTROLNET_MODEL_PATH=data/models/controlnet
 
-# Configuration AWS S3 (optionnel)
-AWS_ACCESS_KEY_ID=
-AWS_SECRET_ACCESS_KEY=
+# Configuration AWS S3
+AWS_ACCESS_KEY_ID=your_access_key_here
+AWS_SECRET_ACCESS_KEY=your_secret_key_here
 AWS_REGION=us-east-1
-S3_BUCKET_NAME=
+S3_BUCKET_NAME=floor-plan-gallery
 
 # Configuration de l'application
 MAX_WORKERS=1
 DEBUG=false
+S3_UPLOAD_ENABLED=true
 """
     
     with open(".env", "w") as f:

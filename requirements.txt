@@ -29,6 +29,7 @@ safetensors>=0.3.0
 # Cloud et stockage
 boto3>=1.28.0  # Pour AWS S3
 python-dotenv>=1.0.0  # Pour les variables d'environnement
+botocore>=1.31.0  # Core AWS SDK
 
 # Monitoring et logging
 psutil>=5.9.0  # Pour surveiller les ressources système
