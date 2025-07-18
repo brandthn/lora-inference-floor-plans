@@ -3,7 +3,6 @@ import time
 from pathlib import Path
 import sys
 
-# Ajouter le dossier core au path
 sys.path.append(str(Path(__file__).parent / "core"))
 
 from core.config import config_manager
@@ -314,7 +313,7 @@ def render_prompt_section():
         )
     
     # Prompt négatif
-    default_negative = "blurry, low quality, distorted, text, watermark, signature, cropped, out of frame, worst quality, low quality, jpeg artifacts, poorly lit, overexposed, underexposed, glitch, error, deformed, mutated, ugly, disgusting"
+    default_negative = ""
     
     negative_prompt = st.text_area(
         "Prompt négatif",

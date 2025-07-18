@@ -150,7 +150,7 @@ streamlit run streamlit_app.py --server.port 8501 --server.address 0.0.0.0
     
     # Script pour Windows
     launch_bat = """@echo off
-echo 🚀 Lancement de Floor Plan Generator...
+echo ✅ Lancement de Floor Plan Generator...
 streamlit run streamlit_app.py --server.port 8501 --server.address 0.0.0.0
 pause
 """
@@ -188,7 +188,7 @@ def main():
     models_ok = check_model_files()
     
     print("\n" + "=" * 50)
-    print("📊 Résumé du setup:")
+    print("✅ Résumé du setup:")
     print("✅ Structure de dossiers créée")
     print("✅ Configuration générée")
     print("✅ Dépendances installées")
@@ -196,12 +196,12 @@ def main():
     
     if models_ok:
         print("✅ Modèles vérifiés")
-        print("\n🎉 Setup terminé avec succès!")
-        print("🚀 Lancez l'application avec: ./launch.sh (Linux/macOS) ou launch.bat (Windows)")
-        print("🌐 Ou directement: streamlit run streamlit_app.py")
+        print("\n✅  Setup terminé avec succès!")
+        print("✅ Lancez l'application avec: ./launch.sh (Linux/macOS) ou launch.bat (Windows)")
+        print("✅ Ou directement: streamlit run streamlit_app.py")
     else:
         print("⚠️  Modèles manquants")
-        print("\n📝 Prochaines étapes:")
+        print("\n Prochaines étapes:")
         print("1. Placez vos modèles dans les dossiers appropriés")
         print("2. Vérifiez la configuration dans config/models_config.yaml")
         print("3. Lancez l'application avec: ./launch.sh ou launch.bat")

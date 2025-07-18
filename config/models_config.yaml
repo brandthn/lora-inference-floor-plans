@@ -45,10 +45,10 @@ samplers:
   - "DDIM"
 
 prompt_templates:
-  basic_floorplan: "floor plan of a {room_type}, architectural drawing, top view, clean lines, white background"
-  detailed_floorplan: "detailed floor plan of a {room_type}, architectural blueprint, measurements, furniture layout, professional drawing"
-  modern_floorplan: "modern floor plan design, {room_type}, minimalist style, clean architecture, top-down view"
-  traditional_floorplan: "traditional floor plan, {room_type}, classical architecture, detailed layout, blueprint style"
+  first_floorplan_dataset : "Floor plan. The first bedroom is located at south east. The second bedroom is located at south. The dining and lounge are combined and are located at north west. The first storeroom is located at center. The second storeroom is located at south west. The first bathroom is located at south. The second bathroom is located at center."
+  second_floorplan_dataset: "Floor plan. The first bedroom is located at north west. The second bedroom is located at south west. The dining and lounge are combined and are located at north east. The first storeroom is located at north. The first bathroom is located at west. The second bathroom is located at center."
+  third_floorplan_dataset: "Floor plan. The first bedroom is located at north east. The second bedroom is located at north west. The dining and lounge are combined and are located at south. The first storeroom is located at east. The first bathroom is located at north. The second bathroom is located at center."
+  Completely_different_prompt: "traditional floor plan, {room_type}, classical architecture, detailed layout, blueprint style"
 
 room_types:
   - "2 bedroom apartment"
