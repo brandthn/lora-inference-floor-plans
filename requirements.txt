@@ -1,37 +1,38 @@
-# PyTorch avec support MPS pour M2 Max
+# Interface utilisateur
+streamlit>=1.28.0
+streamlit-option-menu>=0.3.6
+
+# Machine Learning et Deep Learning
+# Note: Si vous utilisez torch nightly, commentez ces lignes et installez manuellement
 torch>=2.0.0
 torchvision>=0.15.0
+# Pour torch nightly: pip install --pre torch torchvision --index-url https://download.pytorch.org/whl/nightly/cpu
+# Ou pour GPU: pip install --pre torch torchvision --index-url https://download.pytorch.org/whl/nightly/cu121
 
-# Diffusers et transformers
-diffusers>=0.24.0
-transformers>=4.35.0
-accelerate>=0.24.0
-peft>=0.7.0
+diffusers>=0.21.0
+transformers>=4.21.0
+accelerate>=0.20.0
+peft>=0.5.0
+# xformers>=0.0.20  # Optionnel, peut causer des problèmes de compatibilité
 
-# ControlNet et utilitaires image
-controlnet-aux>=0.0.7
-# xformers - RETIRÉ (problème compilation macOS)
-safetensors>=0.4.0
-pillow>=9.5.0
+# Traitement d'images
+Pillow>=10.0.0
 opencv-python>=4.8.0
 numpy>=1.24.0
 
-# Interface web
-streamlit>=1.28.0
+# Utilitaires
+PyYAML>=6.0
+requests>=2.31.0
+tqdm>=4.65.0
+safetensors>=0.3.0
 
-# API (optionnel)
-fastapi>=0.104.0
-uvicorn>=0.24.0
-python-multipart>=0.0.6
-aiofiles>=23.2.0
+# Cloud et stockage
+boto3>=1.28.0  # Pour AWS S3
+python-dotenv>=1.0.0  # Pour les variables d'environnement
 
-# AWS et utilitaires
-boto3>=1.29.0
-python-dotenv>=1.0.0
+# Monitoring et logging
+psutil>=5.9.0  # Pour surveiller les ressources système
 
-# Dépendances additionnelles pour macOS
-scipy>=1.10.0
-protobuf>=3.20.0
-
-# Optionnel pour réduire les warnings
-mediapipe>=0.10.0
+# Développement et debugging (optionnel)
+# ipython>=8.14.0
+# jupyter>=1.0.0

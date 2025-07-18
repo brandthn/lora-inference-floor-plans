@@ -1,0 +1,61 @@
+base_models:
+  sdxl_base:
+    path: "/Users/brandontchakaniyungeko/visual_ai/ComfyUI/models/checkpoints/sd_xl_base_1.0.safetensors"
+    type: "sdxl"
+    default: true
+  juggernaut_xl:
+    path: "data/models/base/xl_juggernautXL_juggXIByRundiffusion.safetensors"
+    type: "sdxl"
+    default: false
+
+lora_models:
+  lora_plan_v1:
+    path: "/Users/brandontchakaniyungeko/visual_ai/ComfyUI/models/loras/floor_plans_a_v1.safetensors"
+    default_weight: 0.8
+    description: "Premier LoRA pour génération de plans"
+  lora_plan_v2:
+    path: "data/models/lora/lora_plan_v2.safetensors"
+    default_weight: 0.8
+    description: "Version améliorée du LoRA plan"
+  wall_lora:
+    path: "/Users/brandontchakaniyungeko/visual_ai/ComfyUI/models/loras/Wall_Lora_2.safetensors"
+    default_weight: 0.7
+    description: "LoRA spécialisé pour les murs (canny edge)"
+
+controlnet_models:
+  canny:
+    path: "data/models/controlnet/control_canny.safetensors"
+    type: "canny"
+
+generation_defaults:
+  steps: 30
+  cfg_scale: 7.5
+  sampler: "DPM++ 2M Karras"
+  width: 512
+  height: 512
+  batch_size: 1
+  denoise_strength: 0.8
+  seed: -1  # -1 pour aléatoire
+
+samplers:
+  - "Euler"
+  - "Euler a"
+  - "DPM++ 2M Karras"
+  - "DPM++ SDE Karras"
+  - "DDIM"
+
+prompt_templates:
+  basic_floorplan: "floor plan of a {room_type}, architectural drawing, top view, clean lines, white background"
+  detailed_floorplan: "detailed floor plan of a {room_type}, architectural blueprint, measurements, furniture layout, professional drawing"
+  modern_floorplan: "modern floor plan design, {room_type}, minimalist style, clean architecture, top-down view"
+  traditional_floorplan: "traditional floor plan, {room_type}, classical architecture, detailed layout, blueprint style"
+
+room_types:
+  - "2 bedroom apartment"
+  - "3 bedroom house"
+  - "studio apartment"
+  - "office space"
+  - "restaurant"
+  - "hotel room"
+  - "living room"
+  - "kitchen"
