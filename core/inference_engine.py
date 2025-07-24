@@ -338,7 +338,7 @@ class InferenceEngine:
     def upload_to_s3(self, result: GenerationResult) -> Optional[str]:
         """Upload optionnel vers S3"""
         try:
-            from .services.s3_service import s3_service
+            from .s3_service import s3_service
             
             # Upload vers S3
             s3_metadata = s3_service.upload_generation(result)

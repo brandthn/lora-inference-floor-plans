@@ -7,8 +7,8 @@ from dataclasses import dataclass, asdict
 from pathlib import Path
 import uuid
 
-from ..generation_params import GenerationResult, GenerationParams
-from ..utils.prompt_hash import generate_prompt_hash, extract_prompt_structure, PromptStructure
+from .generation_params import GenerationResult, GenerationParams
+from .utils.prompt_hash import generate_prompt_hash, extract_prompt_structure, PromptStructure
 
 @dataclass
 class S3Paths:
@@ -59,7 +59,7 @@ class S3Service:
             's3',
             aws_access_key_id=os.getenv('AWS_ACCESS_KEY_ID'),
             aws_secret_access_key=os.getenv('AWS_SECRET_ACCESS_KEY'),
-            region_name=os.getenv('AWS_REGION', 'us-east-1')
+            region_name=os.getenv('AWS_REGION', 'eu-west-1')
         )
         
         # Vérifier la connectivité

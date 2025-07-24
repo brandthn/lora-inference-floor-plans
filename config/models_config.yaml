@@ -24,7 +24,7 @@ lora_models:
 
 controlnet_models:
   canny:
-    path: "data/models/controlnet/control_canny.safetensors"
+    path: "/Users/brandontchakaniyungeko/visual_ai/ComfyUI/models/controlnet/diffusion_pytorch_model_V2.safetensors"
     type: "canny"
 
 generation_defaults:
