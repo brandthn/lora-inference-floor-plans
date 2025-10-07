@@ -13,8 +13,8 @@ lora_models:
     path: "/Users/brandontchakaniyungeko/visual_ai/ComfyUI/models/loras/floor_plans_a_v1.safetensors"
     default_weight: 0.8
     description: "Premier LoRA pour génération de plans"
-  lora_plan_v2:
-    path: "data/models/lora/lora_plan_v2.safetensors"
+  Test_Lora_2:
+    path: "/Users/brandontchakaniyungeko/visual_ai/ComfyUI/models/loras/Test_Lora_2.safetensors"
     default_weight: 0.8
     description: "Version améliorée du LoRA plan"
   wall_lora:
